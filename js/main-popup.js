@@ -29,4 +29,24 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+    
+    // Refresh button functionality
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            // Find the currently active iframe
+            const activePane = document.querySelector('.tab-pane.active');
+            if (activePane) {
+                const iframe = activePane.querySelector('iframe');
+                if (iframe) {
+                    // Refresh iframe by reloading its source
+                    const currentSrc = iframe.src;
+                    iframe.src = '';
+                    setTimeout(() => {
+                        iframe.src = currentSrc;
+                    }, 100);
+                }
+            }
+        });
+    }
 });
