@@ -7,25 +7,55 @@
     <style>
         body {
             width: 580px;
-            height: 560px;
+            height: 600px;
         }
     </style>
 </head>
 <body>
 <div class="iframe-container">
     <div class="demo-container">
-        <iframe
-                src="https://secure.fileshare.ovh/file-sharing-embedded.html"
-                class="demo-iframe"
-                title="Secure File Share Service"
-                loading="lazy"
-                allow="clipboard-read; clipboard-write"
-                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals">
-            <p>Your browser does not support iframes. Please visit
-                <a href="https://secure.fileshare.ovh/file-sharing-embedded.html" target="_blank">
-                    Secure File Share
-                </a> directly.</p>
-        </iframe>
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="share">🔗 Share</button>
+            <button class="tab-btn" data-tab="transfer">🔄 Transfer</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Share Tab -->
+            <div id="share-tab" class="tab-pane active">
+                <div style="transform: scale(0.9);">
+                    <iframe
+                            src="https://secure.fileshare.ovh/file-sharing-embedded.html"
+                            class="demo-iframe"
+                            title="Secure File Share Service"
+                            loading="lazy"
+                            allow="clipboard-read; clipboard-write">
+                        <p>Your browser does not support iframes. Please visit
+                            <a href="https://secure.fileshare.ovh/file-sharing-embedded.html" target="_blank">
+                                Secure File Share
+                            </a> directly.</p>
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Transfer Tab -->
+            <div id="transfer-tab" class="tab-pane">
+                <div style="transform: scale(0.8);">
+                    <iframe
+                            src="https://secure.fileshare.ovh/file-transfer-embedded.html"
+                            class="demo-iframe"
+                            title="Secure File Transfer Service"
+                            loading="lazy"
+                            allow="clipboard-read; clipboard-write">
+                        <p>Your browser does not support iframes. Please visit
+                            <a href="https://secure.fileshare.ovh/file-transfer-embedded.html" target="_blank">
+                                Secure File Transfer
+                            </a> directly.</p>
+                    </iframe>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

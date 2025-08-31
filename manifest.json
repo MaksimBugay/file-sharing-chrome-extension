@@ -4,8 +4,18 @@
   "name": "__MSG_appName__",
   "version": "2.0.0",
   "description": "__MSG_shortDesc__",
+  "author": "Maksim Bugai",
+  "homepage_url": "https://secure.fileshare.ovh",
   "permissions": [
+    "clipboardRead",
+    "clipboardWrite"
   ],
+  "host_permissions": [
+    "https://secure.fileshare.ovh/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; frame-src https://secure.fileshare.ovh;"
+  },
   "background": {
     "service_worker": "background.js"
   },
