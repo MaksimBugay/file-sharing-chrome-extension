@@ -134,6 +134,33 @@ body {
     background: #dee2e6;
 }
 
+/* Open Window Button */
+.open-window-btn {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-left: 8px;
+    font-size: 1.1em;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+}
+
+.open-window-btn:hover {
+    background: #e9ecef;
+    color: #2196F3;
+    border-color: #2196F3;
+}
+
+.open-window-btn:active {
+    background: #dee2e6;
+}
+
 /* Transfer Info Message */
 .transfer-info {
     background: linear-gradient(135deg, #e8f5e8, #f1f8e9);

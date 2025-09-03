@@ -49,4 +49,25 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+    
+    // Open in new window button functionality
+    const openWindowBtn = document.getElementById('openWindowBtn');
+    if (openWindowBtn) {
+        openWindowBtn.addEventListener('click', function() {
+            // Find the currently active iframe
+            const activePane = document.querySelector('.tab-pane.active');
+            if (activePane) {
+                const iframe = activePane.querySelector('iframe');
+                if (iframe && iframe.src) {
+                    // Open the iframe source in a new window that fits the screen
+                    chrome.windows.create({
+                        url: iframe.src,
+                        type: 'popup',
+                        state: 'maximized',
+                        focused: true
+                    });
+                }
+            }
+        });
+    }
 });
