@@ -8,8 +8,7 @@
   "homepage_url": "https://secure.fileshare.ovh",
   "permissions": [
     "clipboardRead",
-    "clipboardWrite",
-    "tabs"
+    "clipboardWrite"
   ],
   "host_permissions": [
     "https://secure.fileshare.ovh/*"
