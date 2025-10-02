@@ -15,6 +15,11 @@ chrome.runtime.onMessage.addListener(async function (request) {
                 await PushcaClient.stopWebSocket();
             }
             await openWsConnection();
+            window.open(
+                `https://secure.fileshare.ovh/file-sharing-embedded.html?page-id=${pageId}`,
+                "_blank",
+                "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600"
+            );
         }
     }
 });
@@ -53,14 +58,6 @@ PushcaClient.onMessageHandler = async function (ws, data) {
         appendTextToInput(` ${data}`);
         await PushcaClient.stopWebSocket();
     }
-}
-
-PushcaClient.onOpenHandler = async function () {
-    window.open(
-        `https://secure.fileshare.ovh/file-sharing-embedded.html?page-id=${pageId}`,
-        "_blank",
-        "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600"
-    );
 }
 
 async function openWsConnection() {
