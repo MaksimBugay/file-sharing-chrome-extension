@@ -4,27 +4,21 @@ const pageId = uuid.v4().toString();
 
 let lastClickedElement = null;
 
-let waitingForDownloadLink = false;
-
 document.addEventListener("contextmenu", (event) => {
-    if (!waitingForDownloadLink) {
-        lastClickedElement = event.target;
-    }
+    lastClickedElement = event.target;
 });
 
 chrome.runtime.onMessage.addListener(async function (request) {
     if (request.message === "insertDownloadUrl") {
         if (lastClickedElement) {
-            if (PushcaClient.isOpen()) {
-                await PushcaClient.stopWebSocket();
+            if (!PushcaClient.isOpen()) {
+                await openWsConnection();
             }
-            await openWsConnection();
             window.open(
                 `https://secure.fileshare.ovh/file-sharing-embedded.html?page-id=${pageId}`,
                 "_blank",
                 "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600"
             );
-            waitingForDownloadLink = true;
         }
     }
 });
@@ -62,7 +56,6 @@ PushcaClient.onMessageHandler = async function (ws, data) {
     if (data.startsWith("https://secure.fileshare.ovh/public-binary-ex.html")) {
         appendTextToInput(` ${data}`);
         await PushcaClient.stopWebSocket();
-        waitingForDownloadLink = false;
     }
 }
 
