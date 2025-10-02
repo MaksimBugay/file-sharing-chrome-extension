@@ -4,8 +4,12 @@ const pageId = uuid.v4().toString();
 
 let lastClickedElement = null;
 
+let waitingForDownloadLink = false;
+
 document.addEventListener("contextmenu", (event) => {
-    lastClickedElement = event.target;
+    if (!waitingForDownloadLink) {
+        lastClickedElement = event.target;
+    }
 });
 
 chrome.runtime.onMessage.addListener(async function (request) {
@@ -20,6 +24,7 @@ chrome.runtime.onMessage.addListener(async function (request) {
                 "_blank",
                 "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=600"
             );
+            waitingForDownloadLink = true;
         }
     }
 });
@@ -57,6 +62,7 @@ PushcaClient.onMessageHandler = async function (ws, data) {
     if (data.startsWith("https://secure.fileshare.ovh/public-binary-ex.html")) {
         appendTextToInput(` ${data}`);
         await PushcaClient.stopWebSocket();
+        waitingForDownloadLink = false;
     }
 }
 
