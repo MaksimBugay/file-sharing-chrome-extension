@@ -6,7 +6,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-chrome.webNavigation.onCompleted.addListener((details) => {
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.contextMenus.create({
+        id: "insertDownloadUrlMenuItem",
+        title: "Fileshare: securely publish content with download links",
+        contexts: ["all"],
+        documentUrlPatterns: ["http://*/*", "https://*/*"]
+    });
+});
+
+chrome.contextMenus.onClicked.addListener(
+    (info, tab) => {
+        if (info.menuItemId === "insertDownloadUrlMenuItem") {
+            chrome.tabs.sendMessage(tab.id, {
+                message: "insertDownloadUrl"
+            });
+        }
+    }
+);
+chrome.webNavigation.onDOMContentLoaded.addListener((details) => {
     if ((details.frameId === 0)) { // only top-level frames
         injectAutoSharingIntoTab(details.tabId);
     }

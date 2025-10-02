@@ -9,7 +9,8 @@
   "permissions": [
     "scripting",
     "tabs",
-    "webNavigation"
+    "webNavigation",
+    "contextMenus"
   ],
   "host_permissions": [
     "https://*/*"
