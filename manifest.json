@@ -2,17 +2,20 @@
   "manifest_version": 3,
   "default_locale": "en",
   "name": "__MSG_appName__",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "__MSG_shortDesc__",
   "author": "Maksim Bugai",
   "homepage_url": "https://secure.fileshare.ovh",
   "permissions": [
+    "scripting",
+    "tabs",
+    "webNavigation"
   ],
   "host_permissions": [
-    "https://secure.fileshare.ovh/*"
+    "https://*/*"
   ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; frame-src https://secure.fileshare.ovh;"
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval' http://localhost:* http://127.0.0.1:* ; object-src 'self';"
   },
   "background": {
     "service_worker": "background.js"
@@ -25,5 +28,18 @@
     "16": "images/file-sharing.png",
     "48": "images/file-sharing.png",
     "128": "images/file-sharing.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "js/pushca.min.js",
+        "js/auto-sharing.js"
+      ],
+      "css": [
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
 }
