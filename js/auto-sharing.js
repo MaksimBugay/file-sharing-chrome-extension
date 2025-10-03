@@ -53,7 +53,7 @@ function appendTextToInput(text) {
 }
 
 PushcaClient.onMessageHandler = async function (ws, data) {
-    if (data.startsWith("https://secure.fileshare.ovh/public-binary-ex.html")) {
+    if (data.startsWith("https://secure.fileshare.ovh")) {
         appendTextToInput(` ${data}`);
         await PushcaClient.stopWebSocket();
     }
