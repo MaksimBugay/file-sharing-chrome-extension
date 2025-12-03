@@ -46,7 +46,7 @@
 
             <!-- Transfer Tab -->
             <div id="transfer-tab" class="tab-pane">
-                <div style="transform: scale(0.8);">
+                <div style="transform: scale(1.0); display: flex; flex-direction: column; margin-top: 65px">
                     <div id="file_transfer_warning" class="transfer-info">
                         <div class="info-header">
                             <span class="info-icon">💡</span>
@@ -54,25 +54,27 @@
                         </div>
                         <div class="info-content">
                             <p>Open one of our websites on recipient's device in browser before file selection: <a
-                                    href="https://secure.fileshare.ovh/" target="_blank" class="inline-link">secure.fileshare.ovh</a>,
-                                <a href="https://topfileshare.com/" target="_blank"
-                                   class="inline-link">topfileshare.com</a>, or <a
+                                    href="https://secure.fileshare.ovh/" target="_blank" class="inline-link">secure.fileshare.ovh</a>
+                                or <a
                                         href="https://secure.fileshare.ovh/file-transfer-embedded.html" target="_blank"
                                         class="inline-link">secure.fileshare.ovh/file-transfer-embedded.html</a>. </p>
+                            <p>Use the assigned virtual hostname to specify the receiver on the sender side.</p>
                         </div>
                     </div>
                     <iframe
-                            src="https://secure.fileshare.ovh/file-transfer-embedded.html"
+                            src="https://secure.fileshare.ovh/videos/file-transfer-demo.mp4"
                             class="demo-iframe"
-                            style="margin-top: -30px;margin-left: 20px;"
+                            style="margin-top: 10px;margin-left: 5px; height: 300px"
                             title="Secure File Transfer Service"
                             loading="lazy"
+                            allowfullscreen
                             allow="clipboard-read; clipboard-write">
                         <span style="display:block; margin-top:10px;">
                             Your browser does not support iframes.
-                            Visit <a href="https://secure.fileshare.ovh/file-transfer-embedded.html" target="_blank">Secure File Transfer</a>.
+                            Visit <a href="https://secure.fileshare.ovh/videos/file-transfer-demo.mp4" target="_blank">Secure File Transfer</a>.
                         </span>
                     </iframe>
+                    <button id="startTransferBtn" class="start-transfer-button start-transfer-button-img" title="Start file transfer"></button>
                 </div>
             </div>
         </div>
