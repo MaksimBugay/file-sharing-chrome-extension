@@ -7,14 +7,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "insertDownloadUrlMenuItem",
-        title: "Fileshare: securely publish content with download links",
+        title: "Fileshare: securely publish content with download links (Ctrl+Shift+S)",
         contexts: ["all"],
         documentUrlPatterns: ["http://*/*", "https://*/*"]
     });
 
     chrome.contextMenus.create({
         id: "startFileTransferMenuItem",
-        title: "Fileshare: transfer your files",
+        title: "Fileshare: transfer your files (Ctrl+Shift+F)",
         contexts: ["all"],
         documentUrlPatterns: ["http://*/*", "https://*/*"]
     });
@@ -33,6 +33,32 @@ chrome.contextMenus.onClicked.addListener(
         }
     }
 );
+
+async function getActiveTabId() {
+    const tabs = await chrome.tabs.query({active: true, currentWindow: true});
+    if (tabs.length === 0) return null;
+    return tabs[0].id ?? null;
+}
+
+chrome.commands.onCommand.addListener((command) => {
+    if (command === "share-files") {
+        getActiveTabId().then((tabId) => {
+            if (tabId) {
+                chrome.tabs.sendMessage(tabId, {
+                    message: "insertDownloadUrl"
+                });
+            }
+        });
+    } else if (command === "transfer-files") {
+        getActiveTabId().then((tabId) => {
+            if (tabId) {
+                chrome.tabs.sendMessage(tabId, {
+                    message: "startFileTransfer"
+                });
+            }
+        });
+    }
+});
 chrome.webNavigation.onDOMContentLoaded.addListener((details) => {
     if ((details.frameId === 0)) { // only top-level frames
         injectAutoSharingIntoTab(details.tabId);
