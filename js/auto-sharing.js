@@ -10,15 +10,22 @@ document.addEventListener("contextmenu", (event) => {
 
 chrome.runtime.onMessage.addListener(async function (request) {
     if (request.message === "insertDownloadUrl") {
+        const w = screen.availWidth;
+        const h = screen.availHeight;
+        const features = `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${w},height=${h},left=0,top=0`;
+
         if (lastClickedElement) {
             if (!PushcaClient.isOpen()) {
                 await openWsConnection();
             }
-            const w = screen.availWidth;
-            const h = screen.availHeight;
-            const features = `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${w},height=${h},left=0,top=0`;
             window.open(
                 `https://secure.fileshare.ovh/file-sharing-embedded.html?page-id=${pageId}`,
+                "_blank",
+                features
+            );
+        } else {
+            window.open(
+                `https://secure.fileshare.ovh/file-sharing-embedded.html`,
                 "_blank",
                 features
             );
