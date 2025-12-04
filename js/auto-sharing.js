@@ -23,6 +23,15 @@ chrome.runtime.onMessage.addListener(async function (request) {
                 features
             );
         }
+    } else if (request.message === "startFileTransfer") {
+        const w = screen.availWidth;
+        const h = screen.availHeight;
+        const features = `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${w},height=${h},left=0,top=0`;
+        window.open(
+            `https://secure.fileshare.ovh/file-transfer-embedded.html`,
+            "_blank",
+            features
+        );
     }
 });
 

@@ -1,8 +1,6 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'popup-opened') {
         sendResponse({status: '0'});  // Respond immediately
-
-        return false;
     }
 });
 
@@ -13,6 +11,13 @@ chrome.runtime.onInstalled.addListener(() => {
         contexts: ["all"],
         documentUrlPatterns: ["http://*/*", "https://*/*"]
     });
+
+    chrome.contextMenus.create({
+        id: "startFileTransferMenuItem",
+        title: "Fileshare: transfer your files",
+        contexts: ["all"],
+        documentUrlPatterns: ["http://*/*", "https://*/*"]
+    });
 });
 
 chrome.contextMenus.onClicked.addListener(
@@ -20,6 +25,10 @@ chrome.contextMenus.onClicked.addListener(
         if (info.menuItemId === "insertDownloadUrlMenuItem") {
             chrome.tabs.sendMessage(tab.id, {
                 message: "insertDownloadUrl"
+            });
+        } else if (info.menuItemId === "startFileTransferMenuItem") {
+            chrome.tabs.sendMessage(tab.id, {
+                message: "startFileTransfer"
             });
         }
     }
