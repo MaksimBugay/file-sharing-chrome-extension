@@ -57,11 +57,18 @@ document.addEventListener('DOMContentLoaded', function () {
             // Find the currently active iframe
             const activePane = document.querySelector('.tab-pane.active');
             if (activePane) {
-                const iframe = activePane.querySelector('iframe');
-                if (iframe && iframe.src) {
+                const shareFilesContainer = activePane.querySelector('#shareFilesContainer');
+                if (shareFilesContainer) {
                     // Open the iframe source in a new window that fits the screen
                     chrome.windows.create({
-                        url: iframe.src,
+                        url: "https://secure.fileshare.ovh/file-sharing-embedded.html",
+                        type: 'popup',
+                        state: 'maximized',
+                        focused: true
+                    });
+                } else {
+                    chrome.windows.create({
+                        url: "https://secure.fileshare.ovh/file-transfer-embedded.html",
                         type: 'popup',
                         state: 'maximized',
                         focused: true

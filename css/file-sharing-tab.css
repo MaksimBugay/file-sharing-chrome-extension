@@ -190,13 +190,13 @@ body {
     font-weight: 600;
 }
 
-.info-content {
+.tab-info-content {
     color: #333;
     line-height: 1.5;
     text-align: left;
 }
 
-.info-content p {
+.tab-info-content p {
     margin: 0 0 0 0;
     font-weight: 500;
 }
