@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     setTimeout(() => {
                         iframe.src = currentSrc;
                     }, 100);
+                } else {
+                    window.location.reload();
                 }
             }
         });
