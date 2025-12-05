@@ -5,8 +5,31 @@ const pageId = uuid.v4().toString();
 let lastClickedElement = null;
 
 document.addEventListener("contextmenu", (event) => {
-    lastClickedElement = event.target;
+    updateLastClickedElement(event.target);
 });
+
+document.addEventListener("focusin", event => {
+    console.log("focused:", event.target);
+    updateLastClickedElement(event.target);
+});
+
+function updateLastClickedElement(candidate) {
+    if (candidate === lastClickedElement) {
+        return;
+    }
+    let isEditableInput = false;
+    if (candidate.tagName === "INPUT" && (candidate.type === "text" || candidate.type === "url")) {
+        isEditableInput = true; // Append text
+    } else if (candidate.tagName === "TEXTAREA") {
+        isEditableInput = true; // textarea
+    } else if (candidate.isContentEditable) {
+        isEditableInput = true;
+    }
+
+    if (isEditableInput) {
+        lastClickedElement = candidate
+    }
+}
 
 chrome.runtime.onMessage.addListener(async function (request) {
     if (request.message === "insertDownloadUrl") {
