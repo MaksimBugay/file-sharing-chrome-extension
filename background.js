@@ -4,7 +4,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
     chrome.contextMenus.create({
         id: "insertDownloadUrlMenuItem",
         title: "Fileshare: securely publish content with download links (Ctrl+Shift+S)",
@@ -18,10 +18,20 @@ chrome.runtime.onInstalled.addListener(() => {
         contexts: ["all"],
         documentUrlPatterns: ["http://*/*", "https://*/*"]
     });
-    chrome.tabs.create({
-        url: "https://secure.fileshare.ovh/videos/chrome_v3_2_0_3.mp4",
-        active: true
+
+    chrome.contextMenus.create({
+        id: "publishRemoteStreamMenuItem",
+        title: "Fileshare: publish remote stream (Ctrl+Shift+U)",
+        contexts: ["all"],
+        documentUrlPatterns: ["http://*/*", "https://*/*"]
     });
+
+    if (details.reason === "install") {
+        chrome.tabs.create({
+            url: "https://secure.fileshare.ovh/videos/chrome_v3_2_0_3.mp4",
+            active: true
+        });
+    }
 });
 
 chrome.contextMenus.onClicked.addListener(
@@ -33,6 +43,10 @@ chrome.contextMenus.onClicked.addListener(
         } else if (info.menuItemId === "startFileTransferMenuItem") {
             chrome.tabs.sendMessage(tab.id, {
                 message: "startFileTransfer"
+            });
+        } else if (info.menuItemId === "publishRemoteStreamMenuItem") {
+            chrome.tabs.sendMessage(tab.id, {
+                message: "publishRemoteStream"
             });
         }
     }
@@ -58,6 +72,14 @@ chrome.commands.onCommand.addListener((command) => {
             if (tabId) {
                 chrome.tabs.sendMessage(tabId, {
                     message: "startFileTransfer"
+                });
+            }
+        });
+    } else if (command === "publish-remote-stream") {
+        getActiveTabId().then((tabId) => {
+            if (tabId) {
+                chrome.tabs.sendMessage(tabId, {
+                    message: "publishRemoteStream"
                 });
             }
         });

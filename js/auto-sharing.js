@@ -1,5 +1,14 @@
 console.log('auto-sharing.js running on', window.location.href);
 
+const ProcessingMode = Object.freeze({
+    INSERT_DOWNLOAD_URL: "INSERT_DOWNLOAD_URL",
+    PUBLISH_REMOTE_STREAM: "PUBLISH_REMOTE_STREAM"
+});
+
+const AutoSharingContext = {}
+
+AutoSharingContext.processingMode = null;
+
 const pageId = uuid.v4().toString();
 
 let lastClickedElement = null;
@@ -32,7 +41,12 @@ function updateLastClickedElement(candidate) {
 }
 
 chrome.runtime.onMessage.addListener(async function (request) {
+    if (AutoSharingContext.processingMode) {
+        alert("File sharing processor is busy at the moment, please try later");
+        return;
+    }
     if (request.message === "insertDownloadUrl") {
+        AutoSharingContext.processingMode = ProcessingMode.INSERT_DOWNLOAD_URL;
         const w = screen.availWidth;
         const h = screen.availHeight;
         const features = `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${w},height=${h},left=0,top=0`;
@@ -62,8 +76,33 @@ chrome.runtime.onMessage.addListener(async function (request) {
             "_blank",
             features
         );
+    } else if (request.message === 'publishRemoteStream') {
+        try {
+            AutoSharingContext.processingMode = ProcessingMode.PUBLISH_REMOTE_STREAM;
+            if (!PushcaClient.isOpen()) {
+                await openWsConnection();
+            }
+            const publicUrl = await sendDownloadRemoteStreamRequestToBinaryProxy(
+                window.location.href,
+                false,
+                currentTimestampPlusDays(1)
+            );
+            window.open(
+                publicUrl,
+                "_blank"
+            );
+            PushcaClient.stopWebSocketPermanently();
+        } finally {
+            AutoSharingContext.processingMode = null;
+        }
     }
 });
+
+function currentTimestampPlusDays(n) {
+    const now = Date.now(); // milliseconds
+    const msInDay = 24 * 60 * 60 * 1000;
+    return Math.floor((now + n * msInDay) / 1000);
+}
 
 function insertTextAtCaret(el, text) {
     el.focus();
@@ -95,9 +134,15 @@ function appendTextToInput(text) {
 }
 
 PushcaClient.onMessageHandler = async function (ws, data) {
-    if (data.startsWith("https://secure.fileshare.ovh")) {
-        appendTextToInput(` ${data}`);
-        await PushcaClient.stopWebSocket();
+    if (AutoSharingContext.processingMode === ProcessingMode.INSERT_DOWNLOAD_URL) {
+        if (data.startsWith("https://secure.fileshare.ovh")) {
+            try {
+                appendTextToInput(` ${data}`);
+                await PushcaClient.stopWebSocketPermanently();
+            } finally {
+                AutoSharingContext.processingMode = null;
+            }
+        }
     }
 }
 
