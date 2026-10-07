@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "default_locale": "en",
   "name": "__MSG_appName__",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "__MSG_shortDesc__",
   "author": "Maksim Bugai",
   "homepage_url": "https://secure.fileshare.ovh",
@@ -58,9 +58,13 @@
     {
       "resources": [
         "js/pushca.min.js",
-        "js/auto-sharing.js"
+        "js/auto-sharing.js",
+        "js/bmv-spinner.js"
       ],
       "css": [
+        "css/consent-dialog.css",
+        "css/bmv-spinner.css",
+        "css/file-sharing-embedded.css"
       ],
       "matches": [
         "<all_urls>"

@@ -102,19 +102,35 @@ function injectAutoSharingIntoTab(tabId) {
             {
                 target: {tabId: tab.id},
                 files: [
-                    'js/pushca.min.js'
+                    'js/pushca.min.js',
+                    'js/bmv-spinner.js'
                 ]
             }
-        ).then(() => {
-            chrome.scripting.executeScript(
-                {
-                    target: {tabId: tab.id},
-                    files: [
-                        'js/auto-sharing.js'
-                    ]
-                }
-            );
-        });
+        ).then(
+            () => {
+                chrome.scripting.insertCSS(
+                    {
+                        target: {tabId: tab.id},
+                        files: [
+                            "css/consent-dialog.css",
+                            "css/bmv-spinner.css",
+                            "css/file-sharing-embedded.css"
+                        ]
+                    }
+                ).then(
+                    () => {
+                        chrome.scripting.executeScript(
+                            {
+                                target: {tabId: tab.id},
+                                files: [
+                                    'js/auto-sharing.js'
+                                ]
+                            }
+                        );
+                    }
+                );
+            }
+        );
     });
 }
 

@@ -141,4 +141,15 @@
     }
 }
 
+.dialog-title {
+    width: 100%;
+    font-size: 1.0rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, mediumblue, royalblue 90%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: inherit;
+    text-align: center;
+}
+
 

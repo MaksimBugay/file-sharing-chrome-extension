@@ -1,5 +1,122 @@
 console.log('auto-sharing.js running on', window.location.href);
 
+//-----------------------create spinner container ----------------------------------------------------------------------
+function createCenteredContainer() {
+    // Create the container
+    const container = document.createElement("div");
+    container.id = "centeredContainer";
+
+    // Style it
+    Object.assign(container.style, {
+        position: "fixed",          // fixed so it stays centered on scroll
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)", // center exactly
+        minWidth: "200px",
+        minHeight: "200px",
+        maxWidth: "80vw",           // 80% of viewport width
+        maxHeight: "80vh",          // 80% of viewport height
+        width: "auto",
+        height: "auto",
+        //backgroundColor: "transparent",   // default bg
+        //boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
+        zIndex: "10000",
+        padding: "20px",
+        overflow: "auto",           // scroll if content exceeds max
+        borderRadius: "8px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+    });
+
+    // Append to page
+    document.body.appendChild(container);
+
+    return container;
+}
+
+const spinnerContainer = createCenteredContainer();
+
+function showEndlessSpinner() {
+    showSpinner(spinnerContainer);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//-----------------------create dialogs---------------------------------------------------------------------------------
+
+function createErrorDialog() {
+    const errorDialog = document.createElement("div");
+    errorDialog.id = "errorDialog";
+    errorDialog.className = "consent-dialog";
+
+    errorDialog.innerHTML = `
+  <div class="error-content">
+    <div class="error-caption">
+      <div class="dialog-title">Error</div>
+      <div class="close-btn-container">
+        <span id="closeErrorBtn" class="close-btn">&times;</span>
+      </div>
+    </div>
+    <div class="error-text centered-container">
+      <p id="errorMsg" class="message-text"></p>
+    </div>
+  </div>
+`;
+
+    document.body.appendChild(errorDialog);
+
+    return errorDialog;
+}
+
+function createInfoDialog() {
+    const dialog = document.createElement("div");
+    dialog.id = "infoDialog";
+    dialog.className = "consent-dialog";
+
+    dialog.innerHTML = `
+    <div class="info-content">
+      <div class="info-caption">
+        <div class="dialog-title">Info</div>
+        <div class="close-btn-container">
+          <span id="closeInfoBtn" class="close-btn" style="color: darkblue">&times;</span>
+        </div>
+      </div>
+      <div id="qrcode" class="centered-container"></div>
+      <p id="infoMsg" class="message-text"></p>
+    </div>
+  `;
+
+    document.body.appendChild(dialog);
+
+    return dialog;
+}
+
+const errorDialog = createErrorDialog();
+const infoDialog = createInfoDialog();
+
+const infoMsg = document.getElementById("infoMsg");
+const closeInfoBtn = document.getElementById("closeInfoBtn");
+
+function showInfoDialog() {
+    infoDialog.classList.add('visible');
+}
+
+function closeInfoDialog() {
+    infoDialog.classList.remove('visible');
+}
+
+closeInfoBtn.addEventListener('click', function () {
+    closeInfoDialog();
+});
+
+function showInfoMsg(msg) {
+    infoMsg.textContent = msg;
+    showInfoDialog();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+
 const ProcessingMode = Object.freeze({
     INSERT_DOWNLOAD_URL: "INSERT_DOWNLOAD_URL",
     PUBLISH_REMOTE_STREAM: "PUBLISH_REMOTE_STREAM"
@@ -77,6 +194,11 @@ chrome.runtime.onMessage.addListener(async function (request) {
             features
         );
     } else if (request.message === 'publishRemoteStream') {
+        showInfoMsg("Publish remote stream request processing was started. Please wait for the new Tab");
+        delay(3000).then(
+            () => closeInfoDialog()
+        );
+        window.showEndlessSpinner();
         try {
             AutoSharingContext.processingMode = ProcessingMode.PUBLISH_REMOTE_STREAM;
             if (!PushcaClient.isOpen()) {
@@ -93,6 +215,7 @@ chrome.runtime.onMessage.addListener(async function (request) {
             );
             PushcaClient.stopWebSocketPermanently();
         } finally {
+            hideSpinner();
             AutoSharingContext.processingMode = null;
         }
     }
