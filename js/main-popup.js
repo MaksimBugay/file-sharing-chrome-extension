@@ -1,3 +1,14 @@
+function openPopupWindow(url) {
+    chrome.runtime.getPlatformInfo(({os}) => {
+        chrome.windows.create({
+            url,
+            type: 'popup',
+            state: os === 'win' ? 'maximized' : 'normal',
+            focused: true
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     chrome.runtime.sendMessage({action: 'popup-opened'});
 
@@ -61,12 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const shareFilesContainer = activePane.querySelector('#shareFilesContainer');
                 const demoUrl = shareFilesContainer ? 'https://secure.fileshare.ovh/videos/chrome_v3_2_0_3.mp4'
                     : "https://secure.fileshare.ovh/videos/file-transfer-demo.mp4";
-                chrome.windows.create({
-                    url: demoUrl,
-                    type: 'popup',
-                    state: 'maximized',
-                    focused: true
-                });
+                openPopupWindow(demoUrl);
             }
         });
     }
@@ -80,20 +86,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (activePane) {
                 const shareFilesContainer = activePane.querySelector('#shareFilesContainer');
                 if (shareFilesContainer) {
-                    // Open the iframe source in a new window that fits the screen
-                    chrome.windows.create({
-                        url: "https://secure.fileshare.ovh/file-sharing-embedded.html",
-                        type: 'popup',
-                        state: 'maximized',
-                        focused: true
-                    });
+                    openPopupWindow("https://secure.fileshare.ovh/file-sharing-embedded.html");
                 } else {
-                    chrome.windows.create({
-                        url: "https://secure.fileshare.ovh/file-transfer-embedded.html",
-                        type: 'popup',
-                        state: 'maximized',
-                        focused: true
-                    });
+                    openPopupWindow("https://secure.fileshare.ovh/file-transfer-embedded.html");
                 }
             }
         });
@@ -102,12 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const startTransferBtn = document.getElementById("startTransferBtn");
     if (startTransferBtn) {
         startTransferBtn.addEventListener('click', function () {
-            chrome.windows.create({
-                url: "https://secure.fileshare.ovh/file-transfer-embedded.html",
-                type: 'popup',
-                state: 'maximized',
-                focused: true
-            });
+            openPopupWindow("https://secure.fileshare.ovh/file-transfer-embedded.html");
         });
     }
 });
