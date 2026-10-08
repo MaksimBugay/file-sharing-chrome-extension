@@ -1,0 +1,165 @@
+/* Fixed dimensions let Chrome size the toolbar popup before its first layout. */
+body {
+    width: 780px;
+    min-width: 780px;
+    height: 600px;
+    min-height: 0;
+    display: block;
+    padding: 10px;
+}
+.sharing-shell {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 0;
+    padding: 12px;
+}
+.main-flow-container { height: 100%; }
+.device-container {
+    height: 100%;
+    gap: 12px;
+    grid-template-areas:
+        "header header"
+        "protection expiration"
+        "upload upload";
+    grid-template-rows: auto auto minmax(0, 1fr);
+}
+.sharing-header { grid-area: header; }
+.expiration-panel { grid-area: expiration; }
+#transReceiverContainer { grid-area: protection; }
+#readMeContainer { grid-area: description; }
+.device-container:has(#protectWithPasswordChoice:checked) {
+    grid-template-areas:
+        "header header"
+        "protection expiration"
+        "protection description"
+        "upload upload";
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+}
+.file-share-fieldset { padding: 10px 14px 12px; }
+.field-hint { margin-bottom: 8px; }
+.protection-panel { height: 100%; }
+.fancy-password-input { margin-top: 8px; }
+.description-panel { padding: 8px 12px; }
+.description-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.description-heading .file-share-legend { padding: 0; }
+.description-toggle {
+    min-height: 30px;
+    padding: 5px 8px;
+    white-space: nowrap;
+    font-size: .75rem;
+}
+.read-me-editor { margin-top: 8px; }
+.read-me-text-memo {
+    height: 72px;
+    min-height: 72px;
+    max-height: 72px;
+}
+#selectFilesContainer {
+    grid-area: upload;
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px;
+}
+.upload-title {
+    margin: 4px 4px 6px;
+    color: #e0edff;
+    font: 700 .85rem/1.5 system-ui, sans-serif;
+}
+.sharing-tab-panel { display: flex; min-height: 0; }
+#selectFilesSubContainer { height: 100%; }
+.drop-zone {
+    height: 100%;
+    min-height: 0;
+    padding: 12px 14px;
+    gap: 8px;
+}
+/* Upload status replaces the disabled drop area without growing the popup. */
+#progressBarContainer {
+    position: absolute;
+    right: 28px;
+    bottom: 28px;
+    left: 28px;
+    width: auto !important;
+    z-index: 2;
+}
+.sharing-shell:has(#progressBarContainer[style*="display: block"]) #selectFilesSubContainer {
+    visibility: hidden;
+}
+/* The calendar is contained by the same toolbar popup height. */
+.sfsp-dropdown {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+    transform: translate(-50%, -50%);
+}
+.sfsp-dropdown.sfsp-open { transform: translate(-50%, -50%); }
+.sharing-tools { flex-shrink: 0; }
+.discover-tools-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: auto;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #527fb8;
+    border-radius: 12px;
+    background: linear-gradient(115deg, #254b7b, #203858);
+    box-shadow: inset 0 1px 0 #d7e8ff18, 0 3px 10px #06112630;
+    color: #f2f7ff;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    transition: background .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+.discover-tools-button .discover-tools-icon {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    color: #a4d4ff;
+    stroke-width: 1.8;
+}
+.discover-tools-icon rect:first-child {
+    fill: currentColor;
+    stroke: none;
+}
+.discover-tools-button .discover-tools-arrow {
+    flex: 0 0 14px;
+    width: 14px;
+    height: 14px;
+    margin-left: 2px;
+    color: #bdd9ff;
+    stroke-width: 2;
+    transition: transform .16s ease;
+}
+.discover-tools-button:hover {
+    border-color: #80b5f1;
+    background: linear-gradient(115deg, #2e5c93, #294a72);
+    box-shadow: inset 0 1px 0 #d7e8ff20, 0 4px 12px #06112640;
+    color: #fff;
+}
+.discover-tools-button:hover .discover-tools-arrow {
+    transform: translate(1px, -1px);
+}
+.discover-tools-button:active {
+    background: #1f3d61;
+    box-shadow: inset 0 2px 5px #081a3740;
+}
+@media (prefers-reduced-motion: reduce) {
+    .discover-tools-button,
+    .discover-tools-button .discover-tools-arrow {
+        transition: none;
+    }
+    .discover-tools-button:hover .discover-tools-arrow {
+        transform: none;
+    }
+}

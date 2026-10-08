@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "default_locale": "en",
   "name": "__MSG_appName__",
-  "version": "2.2.3",
+  "version": "3.0.0",
   "description": "__MSG_shortDesc__",
   "author": "Maksim Bugai",
   "homepage_url": "https://secure.fileshare.ovh",
@@ -26,16 +26,16 @@
     "share-files": {
       "suggested_key": {
         "default": "Ctrl+Shift+S",
-        "mac": "Command+Shift+S"
+        "mac": "MacCtrl+Shift+S"
       },
       "description": "Open File sharing Widget"
     },
     "transfer-files": {
       "suggested_key": {
         "default": "Ctrl+Shift+F",
-        "mac": "Command+Shift+F"
+        "mac": "MacCtrl+Shift+F"
       },
-      "description": "Open File sharing Widget"
+      "description": "Open File transfer Widget"
     },
     "publish-remote-stream": {
       "suggested_key": {

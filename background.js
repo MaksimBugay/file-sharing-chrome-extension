@@ -7,24 +7,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.runtime.onInstalled.addListener((details) => {
     chrome.contextMenus.create({
         id: "insertDownloadUrlMenuItem",
-        title: "Fileshare: securely publish content with download links (Ctrl+Shift+S)",
+        title: "Securely publish content with download links (Ctrl+Shift+S)",
         contexts: ["all"],
         documentUrlPatterns: ["http://*/*", "https://*/*"]
     });
 
     chrome.contextMenus.create({
         id: "startFileTransferMenuItem",
-        title: "Fileshare: transfer your files (Ctrl+Shift+F)",
+        title: "Transfer your files (Ctrl+Shift+F)",
         contexts: ["all"],
         documentUrlPatterns: ["http://*/*", "https://*/*"]
     });
 
-    chrome.contextMenus.create({
+    /*chrome.contextMenus.create({
         id: "publishRemoteStreamMenuItem",
         title: "Fileshare: publish remote stream (Ctrl+Shift+U)",
         contexts: ["all"],
-        documentUrlPatterns: ["http://*/*", "https://*/*"]
-    });
+        documentUrlPatterns: ["http://!*!/!*", "https://!*!/!*"]
+    });*/
 
     if (details.reason === "install") {
         chrome.tabs.create({

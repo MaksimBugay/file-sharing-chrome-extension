@@ -2,227 +2,179 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="../css/file-sharing-tab.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0d1420">
+    <title>Secure FileShare</title>
     <link rel="stylesheet" href="../css/consent-dialog.css">
+    <link rel="stylesheet" href="../css/datetime-picker.css">
     <link rel="stylesheet" href="../css/file-transfer-embedded.css">
     <link rel="stylesheet" href="../css/file-sharing-embedded.css">
-    <style>
-        body {
-            width: 580px;
-            height: 600px;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/file-sharing-popup.css">
+    <link rel="stylesheet" href="../css/popup.css">
+    <script src="../js/datetime-picker.js" defer></script>
+    <script src="../js/file.sharing.min.js" defer></script>
+    <script src="../js/main-popup.js" defer></script>
 </head>
 <body>
-<div class="iframe-container">
-    <div class="demo-container">
-        <!-- Tab Navigation -->
-        <div class="tab-navigation">
-            <button class="tab-btn active" data-tab="share">🔗 Share</button>
-            <button class="tab-btn" data-tab="transfer">📤 Transfer</button>
-            <button class="refresh-btn" data-tab="demo" id="showDemoBtn">🎬 Demo</button>
-            <button class="refresh-btn" id="refreshBtn" title="Refresh current tab">🔄</button>
-            <button class="open-window-btn" id="openWindowBtn"
-                    title="Open in a new window for better user experience and stability">🌐
-            </button>
+<div id="errorDialog" class="consent-dialog" style="z-index: 10050">
+    <div class="error-content">
+        <div class="error-caption">
+            <div class="dialog-title">Error</div>
+            <div class="close-btn-container">
+                <span id="closeErrorBtn" class="close-btn">&times;</span>
+            </div>
         </div>
-
-        <!-- Tab Content -->
-        <div class="tab-content">
-            <!-- Share Tab -->
-            <!--complementary elements for errors and notifications-->
-            <div id="errorDialog" class="consent-dialog" style="z-index: 10050">
-                <div class="error-content">
-                    <div class="error-caption">
-                        <div class="dialog-title">Error</div>
-                        <div class="close-btn-container">
-                            <span id="closeErrorBtn" class="close-btn">&times;</span>
-                        </div>
-                    </div>
-                    <div class="error-text centered-container">
-                        <p id="errorMsg" class="message-text"></p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="consentDialog" class="consent-dialog">
-                <div class="dialog-box">
-                    <h2>Clipboard Access Request</h2>
-                    <p>This website requires access to your clipboard to perform certain actions. Do you want to allow
-                        clipboard
-                        access?</p>
-                    <button id="allowClipboard">Allow</button>
-                    <button id="denyClipboard">Deny</button>
-                </div>
-            </div>
-
-            <div id="infoDialog" class="consent-dialog">
-                <div class="info-content">
-                    <div class="info-caption">
-                        <div class="dialog-title">Info</div>
-                        <div class="close-btn-container">
-                            <span id="closeInfoBtn" class="close-btn" style="color: darkblue">&times;</span>
-                        </div>
-                    </div>
-                    <div id="qrcode" class="centered-container"></div>
-                    <p id="infoMsg" class="message-text"></p>
-                </div>
-            </div>
-            <!--===================================================-->
-            <div id="share-tab" class="tab-pane active">
-                <div id="shareFilesContainer" style="transform: scale(0.8); margin-top: -35px">
-                    <!--<iframe
-                            src="https://secure.fileshare.ovh/file-sharing-embedded.html"
-                            class="demo-iframe"
-                            style="margin-left: 20px;"
-                            title="Secure File Share Service"
-                            loading="lazy"
-                            allow="clipboard-read; clipboard-write">
-                        <span style="display:block; margin-top:10px;">
-                            Your browser does not support iframes.
-                            Visit <a href="https://secure.fileshare.ovh/file-sharing-embedded.html" target="_blank">Secure File Share</a>.
-                        </span>
-                    </iframe>-->
-                    <div id="mainFlowContainer" class="main-flow-container">
-                        <div class="device-container container-max-width" style="min-width: 400px">
-                            <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-bottom: 50px">
-                                <div style="margin-right: 40px">
-                                    <img id="howToButton" src="https://secure.fileshare.ovh/images/help.png"
-                                         alt="How to" class="top-button-img"
-                                         title="Documentation"
-                                         onclick="window.open('https://secure.fileshare.ovh/manual/secure-fileshare-documentation.html', '_blank')">
-                                </div>
-                                <div style="margin-right: 40px">
-                                    <img id="privacyButton" src="https://secure.fileshare.ovh/images/privacy.png"
-                                         alt="Privacy"
-                                         class="top-button-img"
-                                         title="privacy policy"
-                                         onclick="window.open('https://secure.fileshare.ovh/privacy/file-sharing-privacy.html', '_blank')">
-                                </div>
-                            </div>
-                            <div id="transOwnerContainer">
-                                <fieldset class="file-share-fieldset">
-                                    <legend class="file-share-legend">Description/Read-Me</legend>
-                                    <div id="readMeTextMemo"
-                                         class="read-me-text-memo"
-                                         aria-label="provide information about content"
-                                         contenteditable="true"
-                                         spellcheck="true"
-                                         data-lexical-editor="true"
-                                         role="textbox"
-                                    >Default description
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div id="transReceiverContainer">
-                                <fieldset class="file-share-fieldset">
-                                    <legend class="file-share-legend">
-                                        Protect with
-                                    </legend>
-                                    <div id="selectProtectionTypeContainer" class="centered-container">
-                                        <div style="font-size: 14px">
-                                            <label>
-                                                <input type="radio" name="protectWithPasswordChoice" value="pPassword"
-                                                       id="protectWithPasswordChoice">
-                                                Password
-                                            </label>
-                                            <label style="margin-left: 10px">
-                                                <input id="protectWithCaptchaChoice" type="radio"
-                                                       name="protectWithCaptchaChoice"
-                                                       value="pCaptcha">
-                                                Strong captcha
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div id="passwordInputContainer" class="hidden-element">
-                                        <label for="passwordInput"></label>
-                                        <input class="fancy-password-input" type="text" id="passwordInput"
-                                               placeholder="Enter password to protect your content"/>
-                                    </div>
-                                </fieldset>
-                            </div>
-
-                            <div id="selectFilesContainer">
-                                <fieldset class="file-share-fieldset centered-container">
-                                    <legend class="file-share-legend">Select files</legend>
-                                    <div id="selectFilesSubContainer" style="display: flex;margin-top: 5px">
-                                        <div>
-                                            <div style="width: 100%; text-align: left; padding-left: 30px">
-                                                <label id="selectFileLabel" for="fileInput"
-                                                       class="label-text">Browse</label>
-                                            </div>
-                                            <button id="selectFilesBtn"
-                                                    class="select-files-button select-files-button-size"
-                                                    style="margin-left: 15px"></button>
-                                        </div>
-                                        <span class="or-sign label-text">OR</span>
-                                        <div id="dropZone" class="drop-zone multi-line-text">
-                                            Drag and Drop your files here / press Ctrl + V to paste from buffer
-                                        </div>
-                                    </div>
-                                    <input type="file" id="fileInput" style="display:none" multiple>
-                                </fieldset>
-                            </div>
-                            <div class="tb-copy-past" id="tbCopyPastMemo">
-                                <textarea class="tb-copy-past-memo" id="toolBarPasteArea" rows="1" cols="100"
-                                          spellcheck="false"></textarea>
-                            </div>
-                            <div id="progressBarContainer" style="display: none; width: 100%">
-                                <progress id="uploadProgress" value="0" max="100" style="width: 100%"></progress>
-                                <span id="uploadProgressPercentage">0%</span>
-                            </div>
-                        </div>
-                        <div class="hidden-element">
-                            <button id="fileTransferProgressBtn"
-                                    class="transfer-files-button transfer-files-button-size"
-                                    style="display: none"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Transfer Tab -->
-            <div id="transfer-tab" class="tab-pane">
-                <div style="transform: scale(1.0); display: flex; flex-direction: column; margin-top: 65px">
-                    <div id="file_transfer_warning" class="transfer-info">
-                        <div class="info-header">
-                            <span class="info-icon">💡</span>
-                            <h3>How to Receive Files</h3>
-                        </div>
-                        <div class="tab-info-content">
-                            <p>Option 1. Open the copied joint link on recipient's device in browser before file selection.</p>
-                        </div>
-                        <div class="tab-info-content">
-                            <p>Option 2. Open one of our websites on recipient's device in browser before file selection: <a
-                                    href="https://secure.fileshare.ovh/" target="_blank" class="inline-link">secure.fileshare.ovh</a>
-                                or <a
-                                        href="https://secure.fileshare.ovh/file-transfer-embedded.html" target="_blank"
-                                        class="inline-link">secure.fileshare.ovh/file-transfer-embedded.html</a>. </p>
-                            <p>Use the assigned virtual hostname to specify the receiver on the sender's side.</p>
-                        </div>
-                    </div>
-                    <iframe
-                            src="https://secure.fileshare.ovh/videos/file-transfer-demo.mp4"
-                            class="demo-iframe"
-                            style="margin-top: 10px;margin-left: 5px; height: 300px"
-                            title="Secure File Transfer Service"
-                            loading="lazy"
-                            allowfullscreen
-                            allow="clipboard-read; clipboard-write">
-                        <span style="display:block; margin-top:10px;">
-                            Your browser does not support iframes.
-                            Visit <a href="https://secure.fileshare.ovh/videos/file-transfer-demo.mp4" target="_blank">Secure File Transfer</a>.
-                        </span>
-                    </iframe>
-                    <button id="startTransferBtn" class="start-transfer-button start-transfer-button-img"
-                            title="Start file transfer"></button>
-                </div>
-            </div>
+        <div class="error-text centered-container">
+            <p id="errorMsg" class="message-text"></p>
         </div>
     </div>
 </div>
+
+<div id="consentDialog" class="consent-dialog">
+    <div class="dialog-box">
+        <h2>Clipboard Access Request</h2>
+        <p>This website requires access to your clipboard to perform certain actions. Do you want to allow clipboard
+            access?</p>
+        <button id="allowClipboard">Allow</button>
+        <button id="denyClipboard">Deny</button>
+    </div>
+</div>
+
+<div id="infoDialog" class="consent-dialog">
+    <div class="info-content">
+        <div class="info-caption">
+            <div class="dialog-title">Info</div>
+            <div class="close-btn-container">
+                <span id="closeInfoBtn" class="close-btn">&times;</span>
+            </div>
+        </div>
+        <div id="qrcode" class="centered-container"></div>
+        <p id="infoMsg" class="message-text"></p>
+    </div>
+</div>
+
+<main class="sharing-shell">
+    <div id="mainFlowContainer" class="main-flow-container">
+        <div class="device-container container-max-width">
+            <header class="sharing-header">
+                <div class="sharing-brand">
+                    <span class="brand-mark" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"/><path d="M12 16V8m-3 3 3-3 3 3"/></svg>
+                    </span>
+                    <div>
+                        <h1>SECURE FILESHARE</h1>
+                        <span class="eyebrow">Choose protection, then add your content.</span>
+                    </div>
+                </div>
+                <nav class="sharing-tools" aria-label="More tools, help and privacy">
+                    <button type="button" id="exploreToolsBtn" class="utility-button discover-tools-button"
+                            title="Discover more tools at secure.fileshare.ovh">
+                        <svg class="discover-tools-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="3" y="3" width="7" height="7" rx="2"/>
+                            <rect x="14" y="3" width="7" height="7" rx="2"/>
+                            <rect x="3" y="14" width="7" height="7" rx="2"/>
+                            <rect x="14" y="14" width="7" height="7" rx="2"/>
+                        </svg>
+                        <span>Discover more tools</span>
+                        <svg class="discover-tools-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M7 17 17 7M7 7h10v10"/>
+                        </svg>
+                    </button>
+                    <button type="button" id="howToButton" class="utility-button" title="Watch file sharing video" aria-label="Watch file sharing video">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 .5c0 1.5-2.5 2-2.5 3.5m0 3h.01"/></svg>
+                    </button>
+                    <button type="button" id="privacyButton" class="utility-button" title="Privacy policy" aria-label="Privacy policy">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg>
+                    </button>
+                </nav>
+            </header>
+
+            <div id="readMeContainer" class="hidden-element">
+                <section class="file-share-fieldset description-panel" aria-labelledby="descriptionTitle">
+                    <div class="description-heading">
+                        <h2 id="descriptionTitle" class="file-share-legend">Description / Read-me</h2>
+                        <button type="button" id="toggleDescriptionBtn" class="description-toggle"
+                                aria-controls="descriptionEditor" aria-expanded="false">Add description</button>
+                    </div>
+                    <div id="descriptionEditor" class="read-me-editor" hidden>
+                        <div id="readMeTextMemo"
+                             class="read-me-text-memo"
+                             aria-label="Description for recipients"
+                             data-placeholder="Write a note for recipients..."
+                             contenteditable="true"
+                             spellcheck="true"
+                             data-lexical-editor="true"
+                             role="textbox"
+                             aria-multiline="true">Default description</div>
+                    </div>
+                </section>
+            </div>
+
+            <div id="transReceiverContainer">
+                <fieldset class="file-share-fieldset protection-panel">
+                    <legend class="file-share-legend">Protect with</legend>
+                    <p class="field-hint">Choose how others access your files.</p>
+                    <div id="selectProtectionTypeContainer" class="centered-container">
+                        <div class="protection-options">
+                            <label>
+                                <input type="radio" name="protectWithPasswordChoice" value="pPassword"
+                                       id="protectWithPasswordChoice">
+                                Password
+                            </label>
+                            <label>
+                                <input id="protectWithCaptchaChoice" type="radio" name="protectWithCaptchaChoice"
+                                       value="pCaptcha">
+                                Strong captcha
+                            </label>
+                        </div>
+                    </div>
+                    <div id="passwordInputContainer" class="hidden-element">
+                        <label for="passwordInput" class="visually-hidden">Password to protect your content</label>
+                        <input class="fancy-password-input" type="text" id="passwordInput"
+                               placeholder="Enter a password"/>
+                    </div>
+                </fieldset>
+            </div>
+
+            <fieldset class="file-share-fieldset expiration-panel">
+                <legend class="file-share-legend">Remove after</legend>
+                <p class="field-hint">Set an expiration for your content.</p>
+                <div id="additionalRulesContainer" class="centered-container"></div>
+            </fieldset>
+
+            <div id="progressBarContainer" style="display: none; width: 100%" role="status" aria-live="polite">
+                <progress id="uploadProgress" value="0" max="100" style="width: 100%" aria-label="Upload progress"></progress>
+                <span id="uploadProgressPercentage">0%</span>
+            </div>
+
+            <div id="selectFilesContainer" class="file-share-fieldset upload-panel">
+                <h2 id="selectFilesHeading" class="upload-title">Select files</h2>
+                <fieldset id="selectFilesSection" class="sharing-tab-panel"
+                          aria-labelledby="selectFilesHeading">
+                    <div id="selectFilesSubContainer">
+                        <div id="dropZone" class="drop-zone multi-line-text">
+                            <div class="drop-zone-heading">
+                                <span id="selectFileLabel" class="label-text">Select FILES from your device</span> or simply Drop<span id="pasteHint" class="paste-hint" title="⌘+V on Mac; Ctrl+V on Windows and Linux">/Paste</span> them here.
+                            </div>
+                            <button type="button" id="selectFilesBtn" class="select-files-button select-files-button-size">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/><path d="M3 10h18"/></svg>
+                                Browse files
+                            </button>
+                        </div>
+                    </div>
+                    <input type="file" id="fileInput" style="display:none" multiple>
+                </fieldset>
+            </div>
+            <div class="tb-copy-past" id="tbCopyPastMemo">
+                <textarea class="tb-copy-past-memo"
+                          id="toolBarPasteArea" tabindex="-1" rows="1" cols="100" spellcheck="false" aria-label="Paste content to share"></textarea>
+            </div>
+        </div>
+        <div class="hidden-element">
+            <button id="fileTransferProgressBtn" class="transfer-files-button transfer-files-button-size"
+                    style="display: none" aria-label="File transfer progress"></button>
+        </div>
+    </div>
+</main>
 </body>
-<script src="../js/file.sharing.min.js"></script>
-<script src="../js/main-popup.js"></script>
 </html>
