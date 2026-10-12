@@ -21,6 +21,7 @@ function createCenteredContainer() {
         //backgroundColor: "transparent",   // default bg
         //boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
         zIndex: "10000",
+        pointerEvents: "none",
         padding: "20px",
         overflow: "auto",           // scroll if content exceeds max
         borderRadius: "8px",
@@ -30,15 +31,14 @@ function createCenteredContainer() {
         alignItems: "center",
     });
 
-    // Append to page
-    document.body.appendChild(container);
-
     return container;
 }
 
-const spinnerContainer = createCenteredContainer();
+let spinnerContainer = null;
 
 function showEndlessSpinner() {
+    spinnerContainer ||= createCenteredContainer();
+    document.body.insertBefore(spinnerContainer, errorDialog.parentNode === document.body ? errorDialog : null);
     showSpinner(spinnerContainer);
 }
 
@@ -198,8 +198,8 @@ chrome.runtime.onMessage.addListener(async function (request) {
         delay(3000).then(
             () => closeInfoDialog()
         );
-        window.showEndlessSpinner();
         try {
+            window.showEndlessSpinner();
             AutoSharingContext.processingMode = ProcessingMode.PUBLISH_REMOTE_STREAM;
             if (!PushcaClient.isOpen()) {
                 await openWsConnection();
@@ -216,6 +216,8 @@ chrome.runtime.onMessage.addListener(async function (request) {
             PushcaClient.stopWebSocketPermanently();
         } finally {
             hideSpinner();
+            spinnerContainer?.remove();
+            spinnerContainer = null;
             AutoSharingContext.processingMode = null;
         }
     }
