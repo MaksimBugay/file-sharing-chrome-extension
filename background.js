@@ -28,7 +28,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 
     if (details.reason === "install") {
         chrome.tabs.create({
-            url: "https://secure.fileshare.ovh/videos/chrome_v3_2_0_3.mp4",
+            url: "https://secure.fileshare.ovh/videos/chrome_v3_3_demo.mp4",
             active: true
         });
     }
